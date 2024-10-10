@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "sigma_iflash.h": "c",
+        "stm32l5xx_hal.h": "c",
+        "sigma_xmodem.h": "c",
+        "sigma_uart.h": "c"
+    }
+}
