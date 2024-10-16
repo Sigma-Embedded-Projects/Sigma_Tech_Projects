@@ -11,6 +11,9 @@
 
 #include "SIGMA_xmodem.h"
 
+// Rx Buffer
+uint8_t packet_data[PACKET_SIZE_1024];
+
 // XMODEM receive file function
 XmodemStatus SIGMA_Xmodem_Receive(void) {
 
@@ -58,7 +61,7 @@ XmodemStatus SIGMA_Xmodem_Receive(void) {
         }
 
         // Write data to flash memory
-        flash_status = SIGMA_Iflash_Write(FLASH_APP_START_ADDRESS + bytes_received, packet.data, packet_size);
+        flash_status = SIGMA_Iflash_Write(FLASH_APP_START_ADDRESS + bytes_received, packet_data, packet_size);
 
         if (flash_status != HAL_OK) {
           return XMODEM_FLASH_ERROR;  // Flash write failed
@@ -108,7 +111,7 @@ XmodemStatus SIGMA_Xmodem_receive_packet(XmodemPacket *packet) {
   uint16_t packet_size = (packet->start_byte == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
 
   // Receive packet data
-  if (SIGMA_Uart_Receive(packet->data, packet_size) != UART_OK) {
+  if (SIGMA_Uart_Receive(packet_data, packet_size) != UART_OK) {
     return XMODEM_TIMEOUT_ERROR;  // Timeout or UART error
   }
 
@@ -121,7 +124,7 @@ XmodemStatus SIGMA_Xmodem_receive_packet(XmodemPacket *packet) {
   packet->crc = (crc_buf[0] << 8) | crc_buf[1];
 
   // Verify CRC
-  uint16_t calculated_crc = SIGMA_Xmodem_calculate_crc16(packet->data, packet_size);
+  uint16_t calculated_crc = SIGMA_Xmodem_calculate_crc16(packet_data, packet_size);
 
   if (calculated_crc != packet->crc) {
     return XMODEM_CRC_ERROR;  // CRC mismatch

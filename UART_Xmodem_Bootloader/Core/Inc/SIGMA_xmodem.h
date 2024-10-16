@@ -39,7 +39,6 @@ typedef struct {
     uint8_t start_byte;
     uint8_t packet_number;
     uint8_t packet_number_complement;
-    uint8_t data[PACKET_SIZE_1024]; // Max size of a packet (1024 bytes)
     uint16_t crc;
 } XmodemPacket;
 

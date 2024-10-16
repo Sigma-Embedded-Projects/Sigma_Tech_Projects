@@ -146,7 +146,6 @@ HAL_StatusTypeDef SIGMA_Iflash_Write(   uint32_t             address,
 
 	uint32_t  nBytesWritten       = 0;
 	HAL_StatusTypeDef   status    = HAL_OK;
-  uint64_t Data_64 = 0;
 
 	//
 	// If the size of the data buffer is zero, skip.
@@ -164,7 +163,6 @@ HAL_StatusTypeDef SIGMA_Iflash_Write(   uint32_t             address,
 	//
 
 	do {
-    //Data_64 = bytesTo64Bit(pData);
 
 	  if(HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, address, *((uint64_t *) pData)) == HAL_OK){
       address        += IFLASH_DOUBLE_WORD_SIZE ;

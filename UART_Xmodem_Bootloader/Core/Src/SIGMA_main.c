@@ -43,9 +43,9 @@
 UART_HandleTypeDef hlpuart1;
 
 /* USER CODE BEGIN PV */
-uint8_t IFLASH_Write_Buffer[16] = {0};
-uint8_t IFLASH_Read_Buffer[16] = {0};
-char UART_Tx_Buffer[20] = "Hello Sigma Embedded";
+static uint8_t IFLASH_Write_Buffer[16] = {0};
+static uint8_t IFLASH_Read_Buffer[16] = {0};
+static char UART_Tx_Buffer[20] = "Hello Sigma Embedded";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
