@@ -1,12 +1,11 @@
 /**
- * @file    SIGMA_Uart.h
- * @author  Ferenc Nemeth
- *          Sigma Embedded 
- * @date    21 Dec 2018
- *          30/09/2024
+ * @file    SIGMA_uart.h
+ * @author  SIGMA EMBEDDED
+ * @date    16/10/2024
  * @brief   This module is a layer between the HAL UART functions and the Xmodem protocol.
+ * @version 1.0
  *
- *          Copyright (c) 2018 Ferenc Nemeth - https://github.com/ferenc-nemeth
+ *          Copyright (c) 2024 SIGMA EMBEDDED
  */
 
 #ifndef SIGMA_UART_H_
@@ -28,6 +27,5 @@ typedef enum {
 uart_status SIGMA_Uart_Receive(uint8_t *data, uint16_t length);
 uart_status SIGMA_Uart_Transmit_str(uint8_t *data);
 uart_status SIGMA_Uart_Transmit_ch(uint8_t data);
-
 
 #endif /* SIGMA_UART_H_ */

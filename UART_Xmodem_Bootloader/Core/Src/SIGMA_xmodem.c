@@ -1,262 +1,158 @@
+
 /**
  * @file    xmodem.c
- * @author  Ferenc Nemeth
- *          Sigma Embedded 
- * @date    21 Dec 2018
- *          30/09/2024
+ * @author  SIGMA EMBEDDED
+ * @date    16/10/2024
  * @brief   This module is the implementation of the Xmodem protocol.
- *
- *          Copyright (c) 2018 Ferenc Nemeth / Sigma Embedded - https://github.com/ferenc-nemeth
+ * @version 1.0
+ * 
+ *          Copyright (c) 2024 SIGMA EMBEDDED
  */
 
 #include "SIGMA_xmodem.h"
 
-/* Global variables. */
-static uint8_t xmodem_packet_number = 1u;         /**< Packet number counter. */
-static uint32_t xmodem_actual_flash_address = 0u; /**< Address where we have to write. */
-static uint8_t x_first_packet_received = false;   /**< First packet or not. */
+// XMODEM receive file function
+XmodemStatus SIGMA_Xmodem_Receive(void) {
 
-/* Local functions. */
-static uint16_t      SIGMA_Xmodem_Calc_crc(uint8_t *data, uint16_t length);
-static xmodem_status SIGMA_Xmodem_Handle_Packet(uint8_t size);
-static xmodem_status SIGMA_Xmodem_Error_Handler(uint8_t *error_number, uint8_t max_error_number);
+  XmodemPacket packet;
+  uint8_t expected_packet_number = 1;
+  uint32_t bytes_received = 0;
+  HAL_StatusTypeDef flash_status;
+  XmodemStatus receive_status;
+  uint8_t first_packet_received = 0x00;
 
-/**
- * @brief   This function is the base of the Xmodem protocol.
- *          When we receive a header from UART, it decides what action it shall take.
- * @param   void
- * @return  void
- */
-void SIGMA_Xmodem_Receive(void)
-{
-  volatile xmodem_status status = X_OK;
-  uint8_t error_number = 0u;
+  // Send 'C' to initiate the transfer
+  while (!first_packet_received) {
+    SIGMA_Uart_Transmit_ch('C');  // Send 'C' to the host to start transmission
+    receive_status = SIGMA_Xmodem_receive_packet(&packet);
 
-  x_first_packet_received = false;
-  xmodem_packet_number = 1u;
-  xmodem_actual_flash_address = FLASH_APP_START_ADDRESS;
-
-  /* Loop until there isn't any error (or until we jump to the user application). */
-  while (X_OK == status)
-  {
-    uint8_t header = 0x00u;
-
-    /* Get the header from UART. */
-    uart_status comm_status = SIGMA_Uart_Receive(&header, 1u);
-
-    /* Spam the host (until we receive something) with ACSII "C", to notify it, we want to use CRC-16. */
-    if ((UART_OK != comm_status) && (false == x_first_packet_received))
-    {
-      (void)SIGMA_Uart_Transmit_ch(X_C);
-    }
-    /* Uart timeout or any other errors. */
-    else if ((UART_OK != comm_status) && (true == x_first_packet_received))
-    {
-      status = SIGMA_Xmodem_Error_Handler(&error_number, X_MAX_ERRORS);
-    }
-    else
-    {
-      /* Do nothing. */
-    }
-
-    /* The header can be: SOH, STX, EOT and CAN. */
-    switch(header)
-    {
-      xmodem_status packet_status = X_ERROR;
-      /* 128 or 1024 bytes of data. */
-      case X_SOH:
-      case X_STX:
-        /* If the handling was successful, then send an ACK. */
-        packet_status = SIGMA_Xmodem_Handle_Packet(header);
-        if (X_OK == packet_status)
-        {
-          (void)SIGMA_Uart_Transmit_ch(X_ACK);
-        }
-        /* If the error was flash related, then immediately set the error counter to max (graceful abort). */
-        else if (X_ERROR_FLASH == packet_status)
-        {
-          error_number = X_MAX_ERRORS;
-          status = SIGMA_Xmodem_Error_Handler(&error_number, X_MAX_ERRORS);
-        }
-        /* Error while processing the packet, either send a NAK or do graceful abort. */
-        else
-        {
-          status = SIGMA_Xmodem_Error_Handler(&error_number, X_MAX_ERRORS);
-        }
-        break;
-      /* End of Transmission. */
-      case X_EOT:
-        /* ACK, feedback to user (as a text), then jump to user application. */
-        (void)SIGMA_Uart_Transmit_ch(X_ACK);
-        (void)SIGMA_Uart_Transmit_str((uint8_t*)"\n\rFirmware updated!\n\r");
-        (void)SIGMA_Uart_Transmit_str((uint8_t*)"Jumping to user application...\n\r");
-        JumpToAPP();
-        break;
-      /* Abort from host. */
-      case X_CAN:
-        status = X_ERROR;
-        break;
-      default:
-        /* Wrong header. */
-        if (UART_OK == comm_status)
-        {
-          status = SIGMA_Xmodem_Error_Handler(&error_number, X_MAX_ERRORS);
-        }
-        break;
+    if (receive_status == XMODEM_OK && (packet.start_byte == SOH || packet.start_byte == STX)) {
+        first_packet_received = 0x01;
+    } else {
+        // Small delay between sending 'C'
+        HAL_Delay(100);
     }
   }
+
+  // Erase flash memory at the start
+  flash_status = SIGMA_Iflash_Erase(FLASH_APP_START_ADDRESS);
+
+  if (flash_status != HAL_OK) {
+    return XMODEM_FLASH_ERROR;  // Flash erase failed
+  }
+
+  while (1) {
+    if (receive_status == XMODEM_OK) {
+
+      if (packet.start_byte == EOT) {
+        SIGMA_Xmodem_send_ack();  // End of transmission
+        break;
+      }
+
+      if (packet.packet_number == expected_packet_number) {
+        uint32_t packet_size = (packet.start_byte == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
+        // Ensure data fits within flash size
+        uint32_t app_size = FLASH_APP_END_ADDRESS - FLASH_APP_START_ADDRESS;
+        if (bytes_received + packet_size > app_size) {
+          return XMODEM_FLASH_ERROR;  // Exceeds flash size
+        }
+
+        // Write data to flash memory
+        flash_status = SIGMA_Iflash_Write(FLASH_APP_START_ADDRESS + bytes_received, packet.data, packet_size);
+
+        if (flash_status != HAL_OK) {
+          return XMODEM_FLASH_ERROR;  // Flash write failed
+        }
+
+        bytes_received += packet_size;
+        expected_packet_number++;
+        SIGMA_Xmodem_send_ack();  // Acknowledge successful packet reception
+      } else {
+        SIGMA_Xmodem_send_nack();  // Packet number mismatch
+      }
+
+    }else {
+      // Handle error status
+      switch (receive_status) {
+        case XMODEM_CRC_ERROR:
+          SIGMA_Xmodem_send_nack();  // CRC error, request retransmission
+          break;
+        case XMODEM_TIMEOUT_ERROR:
+          SIGMA_Xmodem_send_nack();  // Timeout error
+          break;
+        case XMODEM_PACKET_NUM_ERROR:
+          SIGMA_Xmodem_send_nack();  // Packet number mismatch
+          break;
+        default:
+          return XMODEM_UNKNOWN_ERROR;  // Unknown error occurred
+      }
+    }
+
+    // Get next packet
+    receive_status = SIGMA_Xmodem_receive_packet(&packet);
+  }
+  return XMODEM_OK;  // File received successfully
 }
 
-/**
- * @brief   Calculates the CRC-16 for the input package.
- * @param   *data:  Array of the data which we want to calculate.
- * @param   length: Size of the data, either 128 or 1024 bytes.
- * @return  status: The calculated CRC.
- */
-static uint16_t SIGMA_Xmodem_Calc_crc(uint8_t *data, uint16_t length)
-{
-    uint16_t crc = 0u;
-    while (length)
-    {
-        length--;
-        crc = crc ^ ((uint16_t)*data++ << 8u);
-        for (uint8_t i = 0u; i < 8u; i++)
-        {
-            if (crc & 0x8000u)
-            {
-                crc = (crc << 1u) ^ 0x1021u;
-            }
-            else
-            {
-                crc = crc << 1u;
-            }
-        }
-    }
-    return crc;
+// Function to receive a packet over UART
+XmodemStatus SIGMA_Xmodem_receive_packet(XmodemPacket *packet) {
+  uint8_t header[header_size];  // Header: start byte, packet number, and complement
+
+  if (SIGMA_Uart_Receive(header, header_size) != UART_OK) {
+    return XMODEM_TIMEOUT_ERROR;  // Timeout or UART error
+  }
+
+  packet->start_byte = header[0];
+  packet->packet_number = header[1];
+  packet->packet_number_complement = header[2];
+  uint16_t packet_size = (packet->start_byte == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
+
+  // Receive packet data
+  if (SIGMA_Uart_Receive(packet->data, packet_size) != UART_OK) {
+    return XMODEM_TIMEOUT_ERROR;  // Timeout or UART error
+  }
+
+  // Receive CRC
+  uint8_t crc_buf[crc_size];
+  if (SIGMA_Uart_Receive(crc_buf, crc_size) != UART_OK) {
+    return XMODEM_TIMEOUT_ERROR;  // Timeout or UART error
+  }
+
+  packet->crc = (crc_buf[0] << 8) | crc_buf[1];
+
+  // Verify CRC
+  uint16_t calculated_crc = SIGMA_Xmodem_calculate_crc16(packet->data, packet_size);
+
+  if (calculated_crc != packet->crc) {
+    return XMODEM_CRC_ERROR;  // CRC mismatch
+  }
+
+  return XMODEM_OK;  // Packet received successfully
 }
 
-/**
- * @brief   This function handles the data packet we get from the xmodem protocol.
- * @param   header: SOH or STX.
- * @return  status: Report about the packet.
- */
-static xmodem_status SIGMA_Xmodem_Handle_Packet(uint8_t header)
-{
-  xmodem_status status = X_OK;
-  uint16_t size = 0u;
-
-  /* 2 bytes for packet number, 1024 for data, 2 for CRC*/
-  uint8_t received_packet_number[X_PACKET_NUMBER_SIZE];
-  uint8_t received_packet_data[X_PACKET_1024_SIZE];
-  uint8_t received_packet_crc[X_PACKET_CRC_SIZE];
-
-  /* Get the size of the data. */
-  if (X_SOH == header)
-  {
-    size = X_PACKET_128_SIZE;
-  }
-  else if (X_STX == header)
-  {
-    size = X_PACKET_1024_SIZE;
-  }
-  else
-  {
-    /* Wrong header type. This shoudn't be possible... */
-    status |= X_ERROR;
-  }
-
-  uart_status comm_status = UART_OK;
-  /* Get the packet number, data and CRC from UART. */
-  comm_status |= SIGMA_Uart_Receive(&received_packet_number[0u], X_PACKET_NUMBER_SIZE);
-  comm_status |= SIGMA_Uart_Receive(&received_packet_data[0u], size);
-  comm_status |= SIGMA_Uart_Receive(&received_packet_crc[0u], X_PACKET_CRC_SIZE);
-  /* Merge the two bytes of CRC. */
-  uint16_t crc_received = ((uint16_t)received_packet_crc[X_PACKET_CRC_HIGH_INDEX] << 8u) | ((uint16_t)received_packet_crc[X_PACKET_CRC_LOW_INDEX]);
-  /* We calculate it too. */
-  uint16_t crc_calculated = SIGMA_Xmodem_Calc_crc(&received_packet_data[0u], size);
-
-  /* Communication error. */
-  if (UART_OK != comm_status)
-  {
-    status |= X_ERROR_UART;
-  }
-
-  /* If it is the first packet, then erase the memory. */
-  if ((X_OK == status) && (false == x_first_packet_received))
-  {
-    if (HAL_OK == SIGMA_Iflash_Erase(FLASH_APP_START_ADDRESS))
-    {
-      x_first_packet_received = true;
-    }
-    else
-    {
-      status |= X_ERROR_FLASH;
+// Example CRC-16 calculation function
+uint16_t SIGMA_Xmodem_calculate_crc16(const uint8_t *data, uint16_t length) {
+  uint16_t crc = 0x0000;
+  for (uint16_t i = 0; i < length; i++) {
+    crc ^= (uint16_t)data[i] << 8;
+    for (uint8_t j = 0; j < 8; j++) {
+      if (crc & 0x8000) {
+        crc = (crc << 1) ^ 0x1021;
+      } else {
+        crc <<= 1;
+      }
     }
   }
 
-  /* Error handling and flashing. */
-  if (X_OK == status)
-  {
-    if (xmodem_packet_number != received_packet_number[0u])
-    {
-      /* Packet number counter mismatch. */
-      status |= X_ERROR_NUMBER;
-    }
-    if (255u != (received_packet_number[X_PACKET_NUMBER_INDEX] + received_packet_number[X_PACKET_NUMBER_COMPLEMENT_INDEX]))
-    {
-      /* The sum of the packet number and packet number complement aren't 255. */
-      /* The sum always has to be 255. */
-      status |= X_ERROR_NUMBER;
-    }
-    if (crc_calculated != crc_received)
-    {
-      /* The calculated and received CRC are different. */
-      status |= X_ERROR_CRC;
-    }
-  }
-
-    /* Do the actual flashing (if there weren't any errors). */
-    if ((X_OK == status) && (HAL_OK != SIGMA_Iflash_Write(xmodem_actual_flash_address, &received_packet_data[0u], (uint32_t)size)))
-    {
-      /* Flashing error. */
-      status |= X_ERROR_FLASH;
-    }
-
-  /* Raise the packet number and the address counters (if there weren't any errors). */
-  if (X_OK == status)
-  {
-    xmodem_packet_number++;
-    xmodem_actual_flash_address += size;
-  }
-
-  return status;
+  return crc;
 }
 
-/**
- * @brief   Handles the xmodem error.
- *          Raises the error counter, then if the number of the errors reached critical, do a graceful abort, otherwise send a NAK.
- * @param   *error_number:    Number of current errors (passed as a pointer).
- * @param   max_error_number: Maximal allowed number of errors.
- * @return  status: X_ERROR in case of too many errors, X_OK otherwise.
- */
-static xmodem_status SIGMA_Xmodem_Error_Handler(uint8_t *error_number, uint8_t max_error_number)
-{
-  xmodem_status status = X_OK;
-  /* Raise the error counter. */
-  (*error_number)++;
-  /* If the counter reached the max value, then abort. */
-  if ((*error_number) >= max_error_number)
-  {
-    /* Graceful abort. */
-    (void)SIGMA_Uart_Transmit_ch(X_CAN);
-    (void)SIGMA_Uart_Transmit_ch(X_CAN);
-    status = X_ERROR;
-  }
-  /* Otherwise send a NAK for a repeat. */
-  else
-  {
-    (void)SIGMA_Uart_Transmit_ch(X_NAK);
-    status = X_OK;
-  }
-  return status;
+// Function to send ACK
+void SIGMA_Xmodem_send_ack(void) {
+  SIGMA_Uart_Transmit_ch(ACK);
+}
+
+// Function to send nack
+void SIGMA_Xmodem_send_nack(void) {
+  SIGMA_Uart_Transmit_ch(NACK); 
 }

@@ -94,8 +94,6 @@ int main(void)
   SIGMA_Uart_Transmit_str((uint8_t*)"Welcome To Sigma Embedded\n\r");  
   SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
   SIGMA_Uart_Transmit_str((uint8_t*)"UART Bootloader Example\n\r"); 
-  SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
-  SIGMA_Uart_Transmit_str((uint8_t*)"Based On Ferenc Nemeth Work\n\r"); 
 
 #if UART_Test
   SIGMA_Uart_Transmit_str(UART_Tx_Buffer);

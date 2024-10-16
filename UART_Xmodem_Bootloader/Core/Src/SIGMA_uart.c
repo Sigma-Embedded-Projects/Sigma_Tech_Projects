@@ -1,11 +1,10 @@
 /**
  * @file    SIGMA_uart.c
- * @author  Ferenc Nemeth
- *          Sigma Embedded 
- * @date    21 Dec 2018
- *          30/09/2024
+ * @author  SIGMA EMBEDDED
+ * @date    16/10/2024
  * @brief   This module is a layer between the HAL UART functions and my Xmodem protocol.
- *
+ * @version 1.0
+ * 
  *          Copyright (c) 2018 Ferenc Nemeth - https://github.com/ferenc-nemeth
  */
 
