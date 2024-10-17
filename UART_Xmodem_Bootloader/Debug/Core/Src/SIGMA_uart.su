@@ -1,3 +1,3 @@
-../Core/Src/SIGMA_uart.c:20:13:SIGMA_Uart_Receive	24	static
-../Core/Src/SIGMA_uart.c:37:13:SIGMA_Uart_Transmit_str	24	static
-../Core/Src/SIGMA_uart.c:61:13:SIGMA_Uart_Transmit_ch	24	static
+../Core/Src/SIGMA_uart.c:19:13:SIGMA_Uart_Receive	24	static
+../Core/Src/SIGMA_uart.c:36:13:SIGMA_Uart_Transmit_str	24	static
+../Core/Src/SIGMA_uart.c:60:13:SIGMA_Uart_Transmit_ch	24	static

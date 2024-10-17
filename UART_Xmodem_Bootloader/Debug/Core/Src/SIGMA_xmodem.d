@@ -1,5 +1,5 @@
 Core/Src/SIGMA_xmodem.o: ../Core/Src/SIGMA_xmodem.c \
- ../Core/Inc/SIGMA_xmodem.h ../Core/Inc/SIGMA_Uart.h \
+ ../Core/Inc/SIGMA_xmodem.h ../Core/Inc/SIGMA_uart.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal.h \
  ../Core/Inc/stm32l5xx_hal_conf.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_rcc.h \
@@ -32,7 +32,7 @@ Core/Src/SIGMA_xmodem.o: ../Core/Src/SIGMA_xmodem.c \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h \
  ../Core/Inc/SIGMA_iflash.h
 ../Core/Inc/SIGMA_xmodem.h:
-../Core/Inc/SIGMA_Uart.h:
+../Core/Inc/SIGMA_uart.h:
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal.h:
 ../Core/Inc/stm32l5xx_hal_conf.h:
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_rcc.h:

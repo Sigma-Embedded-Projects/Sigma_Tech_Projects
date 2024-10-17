@@ -2,6 +2,6 @@
 ../Core/Src/SIGMA_iflash.c:48:17:SIGMA_GetBank	16	static
 ../Core/Src/SIGMA_iflash.c:62:19:SIGMA_Iflash_Erase	40	static
 ../Core/Src/SIGMA_iflash.c:126:10:bytesTo64Bit	48	static
-../Core/Src/SIGMA_iflash.c:143:19:SIGMA_Iflash_Write	40	static
-../Core/Src/SIGMA_iflash.c:204:19:SIGMA_Iflash_Read	24	static
-../Core/Src/SIGMA_iflash.c:229:6:JumpToAPP	16	static,ignoring_inline_asm
+../Core/Src/SIGMA_iflash.c:143:19:SIGMA_Iflash_Write	32	static
+../Core/Src/SIGMA_iflash.c:202:19:SIGMA_Iflash_Read	24	static
+../Core/Src/SIGMA_iflash.c:227:6:JumpToAPP	16	static,ignoring_inline_asm

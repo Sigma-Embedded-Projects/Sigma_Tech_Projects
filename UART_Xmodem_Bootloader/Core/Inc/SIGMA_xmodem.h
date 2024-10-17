@@ -27,7 +27,8 @@
 #define PACKET_SIZE_1024    1024
 
 /* Other constantes*/
-#define header_size         3
+#define header_size         1
+#define packet_number_size  2
 #define crc_size            2
 /**
  * @brief Structure representing an XMODEM packet.
@@ -36,9 +37,8 @@
  * start byte, sequence number, payload, and checksum.
  */
 typedef struct {
-    uint8_t start_byte;
-    uint8_t packet_number;
-    uint8_t packet_number_complement;
+    uint8_t header;
+    uint8_t packet_number[packet_number_size];
     uint16_t crc;
 } XmodemPacket;
 

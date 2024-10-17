@@ -29,7 +29,7 @@ XmodemStatus SIGMA_Xmodem_Receive(void) {
     SIGMA_Uart_Transmit_ch('C');  // Send 'C' to the host to start transmission
     receive_status = SIGMA_Xmodem_receive_packet(&packet);
 
-    if (receive_status == XMODEM_OK && (packet.start_byte == SOH || packet.start_byte == STX)) {
+    if (receive_status == XMODEM_OK && (packet.header == SOH || packet.header == STX)) {
         first_packet_received = 0x01;
     } else {
         // Small delay between sending 'C'
@@ -47,13 +47,13 @@ XmodemStatus SIGMA_Xmodem_Receive(void) {
   while (1) {
     if (receive_status == XMODEM_OK) {
 
-      if (packet.start_byte == EOT) {
+      if (packet.header == EOT) {
         SIGMA_Xmodem_send_ack();  // End of transmission
         break;
       }
 
-      if (packet.packet_number == expected_packet_number) {
-        uint32_t packet_size = (packet.start_byte == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
+      if (packet.packet_number[0] == expected_packet_number) {
+        uint32_t packet_size = (packet.header == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
         // Ensure data fits within flash size
         uint32_t app_size = FLASH_APP_END_ADDRESS - FLASH_APP_START_ADDRESS;
         if (bytes_received + packet_size > app_size) {
@@ -99,16 +99,24 @@ XmodemStatus SIGMA_Xmodem_Receive(void) {
 
 // Function to receive a packet over UART
 XmodemStatus SIGMA_Xmodem_receive_packet(XmodemPacket *packet) {
-  uint8_t header[header_size];  // Header: start byte, packet number, and complement
 
-  if (SIGMA_Uart_Receive(header, header_size) != UART_OK) {
+  // Receive header : SOH, STX, EOT
+  if (SIGMA_Uart_Receive(&packet->header, header_size) != UART_OK) {
     return XMODEM_TIMEOUT_ERROR;  // Timeout or UART error
   }
 
-  packet->start_byte = header[0];
-  packet->packet_number = header[1];
-  packet->packet_number_complement = header[2];
-  uint16_t packet_size = (packet->start_byte == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
+  // Check if it's an end of Transmission
+  if(packet->header == EOT){
+	  SIGMA_Uart_Transmit_str((uint8_t*)"Jump to Application\n\r");
+	  SIGMA_Xmodem_send_ack();
+	  JumpToAPP();
+  }
+
+  if (SIGMA_Uart_Receive(packet->packet_number, packet_number_size) != UART_OK) {
+    return XMODEM_TIMEOUT_ERROR;  // Timeout or UART error
+  }
+
+  uint16_t packet_size = (packet->header == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
 
   // Receive packet data
   if (SIGMA_Uart_Receive(packet_data, packet_size) != UART_OK) {
