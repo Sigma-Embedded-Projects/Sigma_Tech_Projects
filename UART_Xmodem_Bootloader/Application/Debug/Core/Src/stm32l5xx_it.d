@@ -1,4 +1,5 @@
-Core/Src/stm32l5xx_it.o: ../Core/Src/stm32l5xx_it.c ../Core/Inc/main.h \
+Core/Src/stm32l5xx_it.o: ../Core/Src/stm32l5xx_it.c \
+ ../Core/Inc/SIGMA_main.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal.h \
  ../Core/Inc/stm32l5xx_hal_conf.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_rcc.h \
@@ -30,7 +31,7 @@ Core/Src/stm32l5xx_it.o: ../Core/Src/stm32l5xx_it.c ../Core/Inc/main.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h \
  ../Core/Inc/stm32l5xx_it.h
-../Core/Inc/main.h:
+../Core/Inc/SIGMA_main.h:
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal.h:
 ../Core/Inc/stm32l5xx_hal_conf.h:
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_rcc.h:

@@ -1,5 +1,4 @@
-Core/Src/stm32l5xx_hal_msp.o: ../Core/Src/stm32l5xx_hal_msp.c \
- ../Core/Inc/SIGMA_main.h \
+Core/Src/SIGMA_main.o: ../Core/Src/SIGMA_main.c ../Core/Inc/SIGMA_main.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal.h \
  ../Core/Inc/stm32l5xx_hal_conf.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_rcc.h \
