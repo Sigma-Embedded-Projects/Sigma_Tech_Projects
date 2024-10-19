@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := Sigma_Embedded_Bootloader_UART
+BUILD_ARTIFACT_NAME := SIGMA_Embedded_Bootloader_UART
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Sigma_Embedded_Bootloader_UART.elf \
+SIGMA_Embedded_Bootloader_UART.elf \
 
 MAP_FILES += \
-Sigma_Embedded_Bootloader_UART.map \
+SIGMA_Embedded_Bootloader_UART.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Sigma_Embedded_Bootloader_UART.list \
+SIGMA_Embedded_Bootloader_UART.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Sigma_Embedded_Bootloader_UART.elf secondary-outputs
+main-build: SIGMA_Embedded_Bootloader_UART.elf secondary-outputs
 
 # Tool invocations
-Sigma_Embedded_Bootloader_UART.elf Sigma_Embedded_Bootloader_UART.map: $(OBJS) $(USER_OBJS) E:\Ayoub_Data\Freelance\Sigma\ Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Sigma_Embedded_Bootloader_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"E:\Ayoub_Data\Freelance\Sigma Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="Sigma_Embedded_Bootloader_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+SIGMA_Embedded_Bootloader_UART.elf SIGMA_Embedded_Bootloader_UART.map: $(OBJS) $(USER_OBJS) E:\Ayoub_Data\Freelance\Sigma\ Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Bootloader\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "SIGMA_Embedded_Bootloader_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"E:\Ayoub_Data\Freelance\Sigma Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Bootloader\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="SIGMA_Embedded_Bootloader_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Sigma_Embedded_Bootloader_UART.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Sigma_Embedded_Bootloader_UART.list"
+SIGMA_Embedded_Bootloader_UART.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "SIGMA_Embedded_Bootloader_UART.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) Sigma_Embedded_Bootloader_UART.elf Sigma_Embedded_Bootloader_UART.list Sigma_Embedded_Bootloader_UART.map default.size.stdout
+	-$(RM) SIGMA_Embedded_Bootloader_UART.elf SIGMA_Embedded_Bootloader_UART.list SIGMA_Embedded_Bootloader_UART.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
