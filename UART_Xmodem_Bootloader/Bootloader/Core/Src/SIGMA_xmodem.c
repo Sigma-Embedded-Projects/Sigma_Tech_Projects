@@ -1,4 +1,3 @@
-
 /**
  * @file    xmodem.c
  * @author  SIGMA EMBEDDED
@@ -46,12 +45,12 @@ XmodemStatus SIGMA_Xmodem_Receive(void) {
 
   while (1) {
     if (receive_status == XMODEM_OK) {
-
+/*
       if (packet.header == EOT) {
         SIGMA_Xmodem_send_ack();  // End of transmission
         break;
       }
-
+*/
       if (packet.packet_number[0] == expected_packet_number) {
         uint32_t packet_size = (packet.header == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
         // Ensure data fits within flash size

@@ -90,10 +90,6 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
-  SIGMA_Uart_Transmit_str((uint8_t*)"Welcome To Sigma Embedded\n\r");  
-  SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
-  SIGMA_Uart_Transmit_str((uint8_t*)"UART Bootloader Example\n\r"); 
 
 #if UART_Test
   SIGMA_Uart_Transmit_str(UART_Tx_Buffer);
@@ -115,18 +111,23 @@ int main(void)
   uint8_t IFLASH_Test_Result = memcmp(IFLASH_Read_Buffer, IFLASH_Write_Buffer, sizeof(IFLASH_Read_Buffer));
 #endif
 
+  SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
+  SIGMA_Uart_Transmit_str((uint8_t*)"Welcome To Sigma Embedded Projects\n\r");  
+  SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
+  SIGMA_Uart_Transmit_str((uint8_t*)"UART Bootloader Example\n\r"); 
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* Ask for new data and start the Xmodem protocol. */
-    SIGMA_Uart_Transmit_str((uint8_t*)"Please send a new binary file with Xmodem protocol to update the firmware.\n\r");
+    /* The use has to send file via Tera Term. */
+    SIGMA_Uart_Transmit_str((uint8_t*)"\n\rPlease send your file!\n\r");
+    /* Start polling for Data */
     SIGMA_Xmodem_Receive();
-    /* We only exit the xmodem protocol, if there are any errors.
-     * In that case, notify the user and start over. */
-    SIGMA_Uart_Transmit_str((uint8_t*)"\n\rFailed... Please try again.\n\r");
+    /* Reach here only if it fails */
+    SIGMA_Uart_Transmit_str((uint8_t*)"\n\rSystem Error! Please Try Again!\n\r");
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

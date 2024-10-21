@@ -5,7 +5,7 @@
  * @brief   This module is a layer between the HAL UART functions and my Xmodem protocol.
  * @version 1.0
  * 
- *          Copyright (c) 2018 Ferenc Nemeth - https://github.com/ferenc-nemeth
+ *          Copyright (c) 2024 SIGMA EMBEDDED
  */
 
 #include "SIGMA_uart.h"
@@ -54,7 +54,7 @@ uart_status SIGMA_Uart_Transmit_str(uint8_t *data)
 
 /**
  * @brief   Transmits a single char to UART.
- * @param   *data: The char.
+ * @param   data: The char.
  * @return  status: Report about the success of the transmission.
  */
 uart_status SIGMA_Uart_Transmit_ch(uint8_t data)

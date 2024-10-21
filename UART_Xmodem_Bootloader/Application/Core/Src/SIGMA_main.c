@@ -32,6 +32,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 static uart_status SIGMA_Uart_Transmit_str(uint8_t *data);
+static uart_status SIGMA_Uart_Receive(uint8_t * data);
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -43,7 +44,7 @@ static uart_status SIGMA_Uart_Transmit_str(uint8_t *data);
 UART_HandleTypeDef hlpuart1;
 
 /* USER CODE BEGIN PV */
-
+uint8_t Serial_CMD = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,7 +90,7 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  SIGMA_Uart_Transmit_str((uint8_t*)"Hello I am Running the App now!");
+  SIGMA_Uart_Transmit_str((uint8_t*)"\nHello I am Running the App now!");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -99,6 +100,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if(SIGMA_Uart_Receive(&Serial_CMD) == UART_OK){
+		  if(Serial_CMD == 'J'){
+			  NVIC_SystemReset();
+		  }
+	  }
   }
   /* USER CODE END 3 */
 }
@@ -234,6 +240,24 @@ uart_status SIGMA_Uart_Transmit_str(uint8_t *data)
   }
 
   if (HAL_OK == HAL_UART_Transmit(&hlpuart1, data, length, UART_TIMEOUT))
+  {
+    status = UART_OK;
+  }
+
+  return status;
+}
+
+/**
+ * @brief   Receives data from UART.
+ * @param   *data: Array to save the received data.
+ * @param   length:  Size of the data.
+ * @return  status: Report about the success of the receiving.
+ */
+uart_status SIGMA_Uart_Receive(uint8_t *data)
+{
+  uart_status status = UART_ERROR;
+
+  if (HAL_OK == HAL_UART_Receive(&hlpuart1, data, 1U, UART_TIMEOUT))
   {
     status = UART_OK;
   }
