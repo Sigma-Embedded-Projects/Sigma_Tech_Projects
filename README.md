@@ -24,4 +24,24 @@ Don't miss out on any updates! Follow us on our social media channels:
 - **[LinkedIn/Groupe](https://www.linkedin.com/groups/12842283/)**
 - **[Youtube](https://www.youtube.com/@SigmaEmbedded-md4dm)**
 
+## List of Projects
+### Project 1 : UART_Xmodem_Bootloader
+
+This project is a bootloader for the STM32L5 microcontroller series (You can customize it for your specific STM32). It allows uploading a .bin file to the microcontroller via UART using the Xmodem protocol.
+
+#### Features
+- UART Communication: Utilizes UART for serial communication between the host PC and the STM32L5.
+- Xmodem Protocol: Implements the Xmodem protocol for reliable file transfer.
+
+#### Getting Started
+- Hardware Setup: Connect the STM32L5 to a PC using a UART interface (STlink).
+- Software Setup: Clone this repository and open it in your preferred IDE (STM32CubeIDE).
+- Upload Process: Use the provided scripts or tools (Tera Term) to upload the .bin file via UART.
+
+#### Usage
+1. Prepare the .bin File: Ensure your firmware is compiled into a .bin file.
+2. Run the Bootloader: Start the bootloader on the STM32L5.
+3. Upload the File: Use the Xmodem protocol to upload the .bin file from your PC to the STM32L5.
+
+
 Happy coding! 🚀
