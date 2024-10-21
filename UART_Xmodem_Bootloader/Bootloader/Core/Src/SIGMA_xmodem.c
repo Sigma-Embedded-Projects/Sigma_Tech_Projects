@@ -21,15 +21,15 @@ XmodemStatus SIGMA_Xmodem_Receive(void) {
   uint32_t bytes_received = 0;
   HAL_StatusTypeDef flash_status;
   XmodemStatus receive_status;
-  uint8_t first_packet_received = 0x00;
+  uint8_t is_packet_received = 0x00;
 
   // Send 'C' to initiate the transfer
-  while (!first_packet_received) {
+  while (!is_packet_received) {
     SIGMA_Uart_Transmit_ch('C');  // Send 'C' to the host to start transmission
     receive_status = SIGMA_Xmodem_receive_packet(&packet);
 
     if (receive_status == XMODEM_OK && (packet.header == SOH || packet.header == STX)) {
-        first_packet_received = 0x01;
+        is_packet_received = 0x01;
     } else {
         // Small delay between sending 'C'
         HAL_Delay(100);
@@ -45,12 +45,7 @@ XmodemStatus SIGMA_Xmodem_Receive(void) {
 
   while (1) {
     if (receive_status == XMODEM_OK) {
-/*
-      if (packet.header == EOT) {
-        SIGMA_Xmodem_send_ack();  // End of transmission
-        break;
-      }
-*/
+
       if (packet.packet_number[0] == expected_packet_number) {
         uint32_t packet_size = (packet.header == SOH) ? PACKET_SIZE_128 : PACKET_SIZE_1024;
         // Ensure data fits within flash size

@@ -12,7 +12,7 @@
 
 /**
  * @brief   Receives data from UART.
- * @param   *data: Array to save the received data.
+ * @param   data: Array to save the received data.
  * @param   length:  Size of the data.
  * @return  status: Report about the success of the receiving.
  */
@@ -30,9 +30,10 @@ uart_status SIGMA_Uart_Receive(uint8_t *data, uint16_t length)
 
 /**
  * @brief   Transmits a string to UART.
- * @param   *data: Array of the data.
+ * @param   data: Array of the data.
  * @return  status: Report about the success of the transmission.
  */
+
 uart_status SIGMA_Uart_Transmit_str(uint8_t *data)
 {
   uart_status status = UART_ERROR;
