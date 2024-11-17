@@ -3,6 +3,10 @@
         "sigma_iflash.h": "c",
         "stm32l5xx_hal.h": "c",
         "sigma_xmodem.h": "c",
-        "sigma_uart.h": "c"
+        "sigma_uart.h": "c",
+        "hashcheck.h": "c",
+        "crypto.h": "c",
+        "sigma_main.h": "c",
+        "err_codes.h": "c"
     }
 }

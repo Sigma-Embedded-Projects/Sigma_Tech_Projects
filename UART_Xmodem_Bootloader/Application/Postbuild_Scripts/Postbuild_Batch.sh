@@ -1,0 +1,1 @@
+"..\Postbuild_Scripts\\Postbuild_hash.bat" .\\SIGMA_Embedded_APP_UART.bin

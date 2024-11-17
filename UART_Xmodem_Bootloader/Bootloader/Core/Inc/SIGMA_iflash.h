@@ -16,6 +16,7 @@
 #define IFLASH_DOUBLE_WORD_SIZE     4*2 // Double Word Size
 #define FLASH_APP_START_ADDRESS     ((uint32_t)0x08020000u)
 #define FLASH_APP_END_ADDRESS       ((uint32_t)FLASH_APP_START_ADDRESS + 64*1024) // Maximum size of the App is 64k - From Page 64 to 96
+#define FLASH_APP_Size              FLASH_APP_END_ADDRESS - FLASH_APP_START_ADDRESS
 #define FLASH_APP_NUM_PAGES         32
 #define ADDR_FLASH_PAGE_64          ((uint32_t)0x08020000) 
 #define FLASH_BASE                  ((uint32_t)0x08000000)

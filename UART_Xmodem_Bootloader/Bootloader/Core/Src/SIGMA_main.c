@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "SIGMA_iflash.h"
+#include "SIGMA_uart.h"
 #include "SIGMA_config.h"
 /* USER CODE END Includes */
 
@@ -46,6 +47,8 @@ UART_HandleTypeDef hlpuart1;
 static uint8_t IFLASH_Write_Buffer[16] = {0};
 static uint8_t IFLASH_Read_Buffer[16] = {0};
 static char UART_Tx_Buffer[20] = "Hello Sigma Embedded";
+static uint8_t Serial_CMD = 0;
+static uint8_t Secure_Boot = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -112,27 +115,58 @@ int main(void)
 #endif
 
   SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
-  SIGMA_Uart_Transmit_str((uint8_t*)"Welcome To Sigma Embedded Projects\n\r");  
-  SIGMA_Uart_Transmit_str((uint8_t*)"\n\r================================\n\r");
-  SIGMA_Uart_Transmit_str((uint8_t*)"UART Bootloader Example\n\r"); 
+  SIGMA_Uart_Transmit_str((uint8_t*)"Mar7aba To Sigma Embedded Projects\n\r");  
+  
+  while(1){
+	  if(SIGMA_Uart_Receive(&Serial_CMD, 1) == UART_OK){
+		  if(Serial_CMD == 'S'){ // Run Secure Boot
+			  Secure_Boot = 1;
+		  }else if (Serial_CMD == 'F'){ // Run FlashBootloader
+        Secure_Boot = 0;
+		  }
 
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* The use has to send file via Tera Term. */
-    SIGMA_Uart_Transmit_str((uint8_t*)"\n\rPlease send your file!\n\r");
-    /* Start polling for Data */
-    SIGMA_Xmodem_Receive();
-    /* Reach here only if it fails */
-    SIGMA_Uart_Transmit_str((uint8_t*)"\n\rSystem Error! Please Try Again!\n\r");
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
+		  break;
+	  }
   }
+
+  if(Secure_Boot){
+    SIGMA_Uart_Transmit_str((uint8_t*)"Secure Boot Example\n\r");
+
+    // Verify the Integrity of the Application
+    if (FW_Hash_Verify() == HASH_SUCCESS){
+      // Jump to Application
+      SIGMA_Uart_Transmit_str((uint8_t*)"Hash Verification OK! L3aaaz Khadam \n\r");
+      SIGMA_Uart_Transmit_str((uint8_t*)"Jump to Application\n\r");
+      JumpToAPP();
+    }else{
+      SIGMA_Uart_Transmit_str((uint8_t*)"Hash Verification NOK! Hadchi Makhadamch\n\r");
+    }
+
+    while(1){
+      // Do nothing
+    }
+
+  }else{
+    /* USER CODE END 2 */
+    SIGMA_Uart_Transmit_str((uint8_t*)"UART Bootloader Example\n\r");
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
+    while (1)
+    {
+      /* The use has to send file via Tera Term. */
+      SIGMA_Uart_Transmit_str((uint8_t*)"\n\rPlease send your file!\n\r");
+      /* Start polling for Data */
+      SIGMA_Xmodem_Receive();
+      /* Reach here only if it fails */
+      SIGMA_Uart_Transmit_str((uint8_t*)"\n\rSystem Error! Please Try Again!\n\r");
+      /* USER CODE END WHILE */
+
+      /* USER CODE BEGIN 3 */
+    }
+  }
+
   /* USER CODE END 3 */
+
 }
 
 /**

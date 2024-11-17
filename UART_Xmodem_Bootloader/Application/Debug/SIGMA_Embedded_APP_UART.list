@@ -443,14 +443,14 @@ int main(void)
   MX_LPUART1_UART_Init();
  8020590:	f000 f866 	bl	8020660 <MX_LPUART1_UART_Init>
   /* USER CODE BEGIN 2 */
-  SIGMA_Uart_Transmit_str((uint8_t*)"\nHello I am Running the App now!");
+  SIGMA_Uart_Transmit_str((uint8_t*)"\nHello, I am Running the App now!");
  8020594:	4807      	ldr	r0, [pc, #28]	; (80205b4 <main+0x34>)
  8020596:	f000 f8d3 	bl	8020740 <SIGMA_Uart_Transmit_str>
-  while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    // Enter J Character to jump to Bootloader
 	  if(SIGMA_Uart_Receive(&Serial_CMD) == UART_OK){
  802059a:	4807      	ldr	r0, [pc, #28]	; (80205b8 <main+0x38>)
  802059c:	f000 f8f6 	bl	802078c <SIGMA_Uart_Receive>

@@ -16,7 +16,7 @@ S_DEPS += \
 
 # Each subdirectory must supply rules for building sources it contributes
 Core/Startup/%.o: ../Core/Startup/%.s Core/Startup/subdir.mk
-	arm-none-eabi-gcc -mcpu=cortex-m33 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m33 -g3 -DDEBUG -c -I"E:/Ayoub_Data/Freelance/Sigma_Embedded/Github_Repo/Sigma_Tech_Projects/UART_Xmodem_Bootloader/Bootloader/STM32_Cryptographic" -I"E:/Ayoub_Data/Freelance/Sigma_Embedded/Github_Repo/Sigma_Tech_Projects/UART_Xmodem_Bootloader/Bootloader/STM32_Cryptographic/include/hash" -I"E:/Ayoub_Data/Freelance/Sigma_Embedded/Github_Repo/Sigma_Tech_Projects/UART_Xmodem_Bootloader/Bootloader/STM32_Cryptographic/legacy_v3/include" -I"E:/Ayoub_Data/Freelance/Sigma_Embedded/Github_Repo/Sigma_Tech_Projects/UART_Xmodem_Bootloader/Bootloader/STM32_Cryptographic/legacy_v3/include/hash" -x assembler-with-cpp -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -o "$@" "$<"
 
 clean: clean-Core-2f-Startup
 

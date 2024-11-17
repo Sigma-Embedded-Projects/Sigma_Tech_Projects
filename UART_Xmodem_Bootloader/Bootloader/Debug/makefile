@@ -9,6 +9,7 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include STM32_Cryptographic/legacy_v3/src/hash/subdir.mk
 -include Drivers/STM32L5xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
@@ -60,8 +61,8 @@ all: main-build
 main-build: SIGMA_Embedded_Bootloader_UART.elf secondary-outputs
 
 # Tool invocations
-SIGMA_Embedded_Bootloader_UART.elf SIGMA_Embedded_Bootloader_UART.map: $(OBJS) $(USER_OBJS) E:\Ayoub_Data\Freelance\Sigma\ Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Bootloader\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "SIGMA_Embedded_Bootloader_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"E:\Ayoub_Data\Freelance\Sigma Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Bootloader\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="SIGMA_Embedded_Bootloader_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+SIGMA_Embedded_Bootloader_UART.elf SIGMA_Embedded_Bootloader_UART.map: $(OBJS) $(USER_OBJS) E:\Ayoub_Data\Freelance\Sigma_Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Bootloader\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "SIGMA_Embedded_Bootloader_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"E:\Ayoub_Data\Freelance\Sigma_Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Bootloader\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="SIGMA_Embedded_Bootloader_UART.map" -Wl,--gc-sections -static -L"E:\Ayoub_Data\Freelance\Sigma_Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Bootloader\STM32_Cryptographic\lib" --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

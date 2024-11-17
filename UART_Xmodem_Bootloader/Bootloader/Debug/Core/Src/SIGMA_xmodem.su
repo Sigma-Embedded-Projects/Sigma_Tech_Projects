@@ -1,5 +1,5 @@
-../Core/Src/SIGMA_xmodem.c:18:14:SIGMA_Xmodem_Receive	40	static
-../Core/Src/SIGMA_xmodem.c:101:14:SIGMA_Xmodem_receive_packet	24	static
-../Core/Src/SIGMA_xmodem.c:145:10:SIGMA_Xmodem_calculate_crc16	24	static
-../Core/Src/SIGMA_xmodem.c:162:6:SIGMA_Xmodem_send_ack	8	static
-../Core/Src/SIGMA_xmodem.c:167:6:SIGMA_Xmodem_send_nack	8	static
+../Core/Src/SIGMA_xmodem.c:17:14:SIGMA_Xmodem_Receive	40	static
+../Core/Src/SIGMA_xmodem.c:95:14:SIGMA_Xmodem_receive_packet	24	static
+../Core/Src/SIGMA_xmodem.c:139:10:SIGMA_Xmodem_calculate_crc16	24	static
+../Core/Src/SIGMA_xmodem.c:156:6:SIGMA_Xmodem_send_ack	8	static
+../Core/Src/SIGMA_xmodem.c:161:6:SIGMA_Xmodem_send_nack	8	static

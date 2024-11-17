@@ -24,4 +24,5 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32L5xx_HAL_Driver/Src \
+STM32_Cryptographic/legacy_v3/src/hash \
 

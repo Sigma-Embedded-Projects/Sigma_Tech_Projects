@@ -30,6 +30,7 @@ Core/Src/stm32l5xx_it.o: ../Core/Src/stm32l5xx_it.c \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_pwr_ex.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart.h \
  ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h \
+ E:/Ayoub_Data/Freelance/Sigma_Embedded/Github_Repo/Sigma_Tech_Projects/UART_Xmodem_Bootloader/Bootloader/STM32_Cryptographic/legacy_v3/include/err_codes.h \
  ../Core/Inc/stm32l5xx_it.h
 ../Core/Inc/SIGMA_main.h:
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal.h:
@@ -62,4 +63,5 @@ Core/Src/stm32l5xx_it.o: ../Core/Src/stm32l5xx_it.c \
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_pwr_ex.h:
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart.h:
 ../Drivers/STM32L5xx_HAL_Driver/Inc/stm32l5xx_hal_uart_ex.h:
+E:/Ayoub_Data/Freelance/Sigma_Embedded/Github_Repo/Sigma_Tech_Projects/UART_Xmodem_Bootloader/Bootloader/STM32_Cryptographic/legacy_v3/include/err_codes.h:
 ../Core/Inc/stm32l5xx_it.h:

@@ -60,14 +60,15 @@ SIGMA_Embedded_APP_UART.bin \
 
 
 # All Target
-all: main-build
+all:
+	+@$(MAKE) --no-print-directory main-build && $(MAKE) --no-print-directory post-build
 
 # Main-build Target
 main-build: SIGMA_Embedded_APP_UART.elf secondary-outputs
 
 # Tool invocations
-SIGMA_Embedded_APP_UART.elf SIGMA_Embedded_APP_UART.map: $(OBJS) $(USER_OBJS) E:\Ayoub_Data\Freelance\Sigma\ Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Application\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "SIGMA_Embedded_APP_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"E:\Ayoub_Data\Freelance\Sigma Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Application\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="SIGMA_Embedded_APP_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+SIGMA_Embedded_APP_UART.elf SIGMA_Embedded_APP_UART.map: $(OBJS) $(USER_OBJS) E:\Ayoub_Data\Freelance\Sigma_Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Application\STM32L552ZETXQ_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "SIGMA_Embedded_APP_UART.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m33 -T"E:\Ayoub_Data\Freelance\Sigma_Embedded\Github_Repo\Sigma_Tech_Projects\UART_Xmodem_Bootloader\Application\STM32L552ZETXQ_FLASH.ld" --specs=nosys.specs -Wl,-Map="SIGMA_Embedded_APP_UART.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -96,6 +97,10 @@ clean:
 	-$(RM) SIGMA_Embedded_APP_UART.bin SIGMA_Embedded_APP_UART.elf SIGMA_Embedded_APP_UART.hex SIGMA_Embedded_APP_UART.list SIGMA_Embedded_APP_UART.map default.size.stdout
 	-@echo ' '
 
+post-build:
+	bash ..\Postbuild_Scripts\Postbuild_Batch.sh
+	-@echo ' '
+
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
@@ -105,6 +110,6 @@ fail-specified-linker-script-missing:
 warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
-.PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
+.PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified post-build
 
 -include ../makefile.targets

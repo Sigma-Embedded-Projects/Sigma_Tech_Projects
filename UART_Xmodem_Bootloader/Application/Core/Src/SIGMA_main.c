@@ -90,7 +90,7 @@ int main(void)
   MX_GPIO_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  SIGMA_Uart_Transmit_str((uint8_t*)"\nHello I am Running the App now!");
+  SIGMA_Uart_Transmit_str((uint8_t*)"\nHello, I am Running the App now!");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,6 +100,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    // Enter J Character to jump to Bootloader
 	  if(SIGMA_Uart_Receive(&Serial_CMD) == UART_OK){
 		  if(Serial_CMD == 'J'){
 			  NVIC_SystemReset();
