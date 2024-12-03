@@ -29,9 +29,9 @@ Don't miss out on any updates! Follow us on our social media channels:
 
 This project is a bootloader for the STM32L5 microcontroller series (You can customize it for your specific STM32). It allows uploading a .bin file to the microcontroller via UART using the Xmodem protocol and uses a Secure Boot verifying the Application Integration!
 Please check these videos to know more about the project:
-Part1 : https://youtu.be/kslrqPsXlkk?si=c7DvNsEs6xCgNGLe
-Part2 : https://youtu.be/zkowaqlYEYA?si=FCBelba8EAOQTEUg
-Part3 : https://youtu.be/xWvAp5bXaRo?si=m-1tw4P3QUfwecpI
+- Part1 : https://youtu.be/kslrqPsXlkk?si=c7DvNsEs6xCgNGLe
+- Part2 : https://youtu.be/zkowaqlYEYA?si=FCBelba8EAOQTEUg
+- Part3 : https://youtu.be/xWvAp5bXaRo?si=m-1tw4P3QUfwecpI
 
 #### Features
 - UART Communication: Utilizes UART for serial communication between the host PC and the STM32L5.
