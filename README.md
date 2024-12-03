@@ -27,11 +27,16 @@ Don't miss out on any updates! Follow us on our social media channels:
 ## List of Projects
 ### Project 1 : UART_Xmodem_Bootloader
 
-This project is a bootloader for the STM32L5 microcontroller series (You can customize it for your specific STM32). It allows uploading a .bin file to the microcontroller via UART using the Xmodem protocol.
+This project is a bootloader for the STM32L5 microcontroller series (You can customize it for your specific STM32). It allows uploading a .bin file to the microcontroller via UART using the Xmodem protocol and uses a Secure Boot verifying the Application Integration!
+Please check these videos to know more about the project:
+Part1 : https://youtu.be/kslrqPsXlkk?si=c7DvNsEs6xCgNGLe
+Part2 : https://youtu.be/zkowaqlYEYA?si=FCBelba8EAOQTEUg
+Part3 : https://youtu.be/xWvAp5bXaRo?si=m-1tw4P3QUfwecpI
 
 #### Features
 - UART Communication: Utilizes UART for serial communication between the host PC and the STM32L5.
 - Xmodem Protocol: Implements the Xmodem protocol for reliable file transfer.
+- Secure Boot : Adding the Integrity verification by calculating the Hash value of the Application using SHA256 Algorithm.
 
 #### Getting Started
 - Hardware Setup: Connect the STM32L5 to a PC using a UART interface (STlink).
@@ -39,9 +44,8 @@ This project is a bootloader for the STM32L5 microcontroller series (You can cus
 - Upload Process: Use the provided scripts or tools (Tera Term) to upload the .bin file via UART.
 
 #### Usage
-1. Prepare the .bin File: Ensure your firmware is compiled into a .bin file.
+1. Prepare the .bin File: Ensure your firmware is compiled into a .bin file and see the magic of the postbuild ;) 
 2. Run the Bootloader: Start the bootloader on the STM32L5.
-3. Upload the File: Use the Xmodem protocol to upload the .bin file from your PC to the STM32L5.
-
+3. Upload the File: Use the Xmodem protocol to upload the .bin file with metadata from your PC to the STM32L5.
 
 Happy coding! 🚀
